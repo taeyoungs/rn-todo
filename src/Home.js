@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, AsyncStorage } from 'react-native';
 import { loadAsync } from 'expo-font';
 import { AppLoading } from 'expo';
+import { connect } from 'react-redux';
 import ToDos from './ToDos';
+import { actionCreators } from './reducers/toDoReducer';
 
-const Home = () => {
+const Home = ({ setInitialState, state }) => {
   const [loading, setLoading] = useState(true);
+
+  const getToDos = async () => {
+    try {
+      // await AsyncStorage.clear();
+      // const toDos = await AsyncStorage.getItem('toDos');
+      // console.log(toDos);
+      if (toDos) {
+        setInitialState(toDos);
+      }
+      //   setInitialState(toDos === null ? {} : toDos);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const fontLoad = async () => {
     try {
       await loadAsync({
         NanumGothic: require('../assets/fonts/NanumGothic-Regular.ttf'),
       });
+      // await AsyncStorage.removeItem('toDos');
     } catch (error) {
       console.log(error);
     } finally {
@@ -19,6 +37,9 @@ const Home = () => {
   };
 
   useEffect(() => {
+    // getToDos();
+    // console.log(actionCreators.addToDo());
+    console.log(state);
     fontLoad();
   }, []);
 
@@ -36,18 +57,27 @@ const Home = () => {
   );
 };
 
+function mapStateToProps(state, ownProps) {
+  return { state, ownProps };
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+  const setInitialState = (toDos) => dispatch(actionCreators.setInit(toDos));
+  return { setInitialState };
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(20, 20, 20, 1)',
+    backgroundColor: '#0984e3',
     alignItems: 'center',
   },
   title: {
     fontSize: 30,
-    color: '#f1c40f',
+    color: 'white',
     fontFamily: 'NanumGothic',
     marginTop: 70,
   },
 });
 
-export default Home;
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
