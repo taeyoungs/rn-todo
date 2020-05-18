@@ -11,11 +11,20 @@ import { actionCreators } from '../src/reducers/toDoReducer';
 
 const window = Dimensions.get('window');
 
-const ToDo = ({ ownProps, remove }) => {
+const ToDo = ({ ownProps, remove, comple }) => {
+  const handleCompleted = () => {};
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.completeBtn} />
-      <Text style={styles.toDoText}>{ownProps.text}</Text>
+      <TouchableOpacity
+        style={
+          ownProps.isCompleted ? styles.completedBtn : styles.unCompletedBtn
+        }
+        onPress={comple}
+      />
+      <Text style={ownProps.isCompleted ? styles.cToDoText : styles.toDoText}>
+        {ownProps.text}
+      </Text>
       <View style={styles.subBtnBox}>
         <TouchableOpacity style={styles.icon}>
           <Text>✏</Text>
@@ -34,8 +43,22 @@ const styles = StyleSheet.create({
     fontSize: 17,
     width: window.width / 2,
   },
-  completeBtn: {
+  cToDoText: {
+    color: '#bdc3c7',
+    fontSize: 17,
+    width: window.width / 2,
+    textDecorationLine: 'line-through',
+  },
+  unCompletedBtn: {
     borderColor: '#0984e3',
+    borderWidth: 2,
+    width: 25,
+    height: 25,
+    marginHorizontal: 15,
+    borderRadius: 30,
+  },
+  completedBtn: {
+    borderColor: '#bdc3c7',
     borderWidth: 2,
     width: 25,
     height: 25,
@@ -57,7 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    margin: 5,
+    margin: 8,
   },
 });
 
@@ -67,7 +90,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch, ownProps) {
   const remove = () => dispatch(actionCreators.deleteToDo(ownProps.id));
-  return { remove };
+  const comple = () => dispatch(actionCreators.completeToDo(ownProps.id));
+  return { remove, comple };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToDo);

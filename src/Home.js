@@ -12,10 +12,11 @@ const Home = ({ setInitialState, state }) => {
   const getToDos = async () => {
     try {
       // await AsyncStorage.clear();
-      // const toDos = await AsyncStorage.getItem('toDos');
-      // console.log(toDos);
+      const toDos = await AsyncStorage.getItem('toDos');
+      // console.log('toDos : ', toDos);
+      // console.log(JSON.parse(toDos));
       if (toDos) {
-        setInitialState(toDos);
+        setInitialState(JSON.parse(toDos));
       }
       //   setInitialState(toDos === null ? {} : toDos);
     } catch (err) {
@@ -37,9 +38,8 @@ const Home = ({ setInitialState, state }) => {
   };
 
   useEffect(() => {
-    // getToDos();
-    // console.log(actionCreators.addToDo());
-    console.log(state);
+    getToDos();
+    // console.log(state);
     fontLoad();
   }, []);
 

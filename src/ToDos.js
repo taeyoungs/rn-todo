@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Dimensions,
   Text,
+  View,
   TextInput,
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -15,7 +16,7 @@ const window = Dimensions.get('window');
 
 const ToDos = ({ add, state }) => {
   const [text, setText] = useState('');
-  //   console.log(state);
+  console.log(state);
 
   const handleSubmit = (e) => {
     const id = uuid.v1();
@@ -31,7 +32,7 @@ const ToDos = ({ add, state }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <TextInput
         style={styles.tInput}
         placeholder="Write something"
@@ -40,9 +41,13 @@ const ToDos = ({ add, state }) => {
         returnKeyType="done"
         onSubmitEditing={handleSubmit}
       />
-      {state !== {} &&
-        Object.values(state).map((toDo) => <ToDo key={toDo.id} {...toDo} />)}
-    </ScrollView>
+      <ScrollView style={styles.scrollV}>
+        {state.toDoReducer &&
+          Object.values(state.toDoReducer).map((toDo) => (
+            <ToDo key={toDo.id} {...toDo} />
+          ))}
+      </ScrollView>
+    </View>
   );
 };
 
@@ -53,6 +58,11 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  scrollV: {
+    backgroundColor: 'white',
+    width: window.width - 50,
+    height: '100%',
   },
   tInput: {
     height: 60,

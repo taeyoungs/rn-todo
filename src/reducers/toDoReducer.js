@@ -7,7 +7,7 @@ const completeToDo = createAction('COMPLETE');
 const updateToDo = createAction('UPDATE');
 const setInit = createAction('INIT');
 
-const initialState = { 1: 'one' };
+const initialState = null;
 
 const toDoReducer = createReducer(initialState, {
   [addToDo]: (state, action) => {
@@ -26,7 +26,7 @@ const toDoReducer = createReducer(initialState, {
       ...state,
       [action.payload]: {
         ...state[action.payload],
-        isCompleted: true,
+        isCompleted: !state[action.payload].isCompleted,
       },
     };
     return newState;

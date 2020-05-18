@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from 'redux';
-import AsyncStorage from 'react-native';
+import { AsyncStorage } from 'react-native';
 import { createLogger } from 'redux-logger';
 import rootReducer from './src/reducers';
 
@@ -18,19 +18,22 @@ import rootReducer from './src/reducers';
 
 const store = createStore(rootReducer, applyMiddleware(createLogger()));
 
-// const saveAsyncStorage = async () => {
-//   try {
-//     const state = store.getState();
-//     if (state !== {} || state !== null) {
-//       await AsyncStorage.setItem('toDos', JSON.stringify(state));
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+const saveAsyncStorage = async () => {
+  try {
+    const state = store.getState();
+    // console.log('123123');
+    // console.log('state', JSON.stringify(state.toDoReducer));
+    const temp = await AsyncStorage.getItem('toDos');
+    if (state) {
+      await AsyncStorage.setItem('toDos', JSON.stringify(state.toDoReducer));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 // console.log(store.getState());
 
 // store.subscribe(store.default.getState());
-// store.subscribe(() => saveAsyncStorage());
+store.subscribe(() => saveAsyncStorage());
 
 export default store;
