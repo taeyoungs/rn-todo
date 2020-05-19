@@ -21,12 +21,12 @@ const store = createStore(rootReducer, applyMiddleware(createLogger()));
 const saveAsyncStorage = async () => {
   try {
     const state = store.getState();
-    // console.log('123123');
+    await AsyncStorage.setItem('toDos', JSON.stringify(state.arrToDoReducer));
     // console.log('state', JSON.stringify(state.toDoReducer));
-    const temp = await AsyncStorage.getItem('toDos');
-    if (state) {
-      await AsyncStorage.setItem('toDos', JSON.stringify(state.toDoReducer));
-    }
+    // const temp = await AsyncStorage.getItem('toDos');
+    // if (state) {
+    //   await AsyncStorage.setItem('toDos', JSON.stringify(state.toDoReducer));
+    // }
   } catch (err) {
     console.log(err);
   }

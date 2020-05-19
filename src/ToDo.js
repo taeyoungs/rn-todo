@@ -1,39 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
   Text,
+  TextInput,
   StyleSheet,
   Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { actionCreators } from '../src/reducers/toDoReducer';
+import { actionCreators } from '../src/reducers/arrToDoReducer';
 
 const window = Dimensions.get('window');
 
-const ToDo = ({ ownProps, remove, comple }) => {
-  const handleCompleted = () => {};
+const ToDo = ({ ownProps, remove, comple, update }) => {
+  // edit: true => 수정 중
+  // edit: false => 수정 완료
+  const [edit, setEdit] = useState(false);
+  const [text, setText] = useState(ownProps.text);
+
+  console.log(ownProps.id);
+
+  const handleEdit = () => {
+    // edit: false 되면 dispatch update
+    if (edit) {
+      const obj = {
+        id: ownProps.id,
+        text,
+      };
+      update(obj);
+      setEdit(false);
+    } else {
+      setEdit(true);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={
-          ownProps.isCompleted ? styles.completedBtn : styles.unCompletedBtn
-        }
-        onPress={comple}
-      />
-      <Text style={ownProps.isCompleted ? styles.cToDoText : styles.toDoText}>
-        {ownProps.text}
-      </Text>
-      <View style={styles.subBtnBox}>
-        <TouchableOpacity style={styles.icon}>
-          <Text>✏</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.icon} onPressOut={remove}>
-          <Text>❌</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <>
+      {!edit ? (
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={
+              ownProps.isCompleted ? styles.completedBtn : styles.unCompletedBtn
+            }
+            onPress={comple}
+          />
+          <Text
+            style={ownProps.isCompleted ? styles.cToDoText : styles.toDoText}
+          >
+            {ownProps.text}
+          </Text>
+          <View style={styles.subBtnBox}>
+            <TouchableOpacity style={styles.icon} onPressOut={handleEdit}>
+              <Text>✏</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.icon} onPressOut={remove}>
+              <Text>❌</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={
+              ownProps.isCompleted ? styles.completedBtn : styles.unCompletedBtn
+            }
+            onPress={comple}
+          />
+          <TextInput
+            style={ownProps.isCompleted ? styles.cToDoText : styles.toDoText}
+            value={text}
+            onChangeText={(text) => setText(text)}
+            onSubmitEditing={handleEdit}
+            returnKeyType={'done'}
+          />
+          <View style={styles.subBtnBox}>
+            <TouchableOpacity onPressOut={handleEdit}>
+              <Text style={styles.icon}>✅</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+    </>
   );
 };
 
@@ -91,7 +138,8 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch, ownProps) {
   const remove = () => dispatch(actionCreators.deleteToDo(ownProps.id));
   const comple = () => dispatch(actionCreators.completeToDo(ownProps.id));
-  return { remove, comple };
+  const update = (obj) => dispatch(actionCreators.updateToDo(obj));
+  return { remove, comple, update };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToDo);

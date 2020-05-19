@@ -4,7 +4,7 @@ import { loadAsync } from 'expo-font';
 import { AppLoading } from 'expo';
 import { connect } from 'react-redux';
 import ToDos from './ToDos';
-import { actionCreators } from './reducers/toDoReducer';
+import { actionCreators } from './reducers/arrToDoReducer';
 
 const Home = ({ setInitialState, state }) => {
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ const Home = ({ setInitialState, state }) => {
     try {
       // await AsyncStorage.clear();
       const toDos = await AsyncStorage.getItem('toDos');
-      // console.log('toDos : ', toDos);
+      console.log('toDos : ', toDos);
       // console.log(JSON.parse(toDos));
       if (toDos) {
         setInitialState(JSON.parse(toDos));

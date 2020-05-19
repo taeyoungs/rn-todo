@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
 
 import toDoReducer from './toDoReducer';
+import arrToDoReducer from './arrToDoReducer';
 
 const rootReducer = combineReducers({
-  toDoReducer,
+  arrToDoReducer,
 });
 
 export default rootReducer;

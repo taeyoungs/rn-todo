@@ -9,26 +9,24 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import uuid from 'react-native-uuid';
-import { actionCreators } from '../src/reducers/toDoReducer';
+import { actionCreators } from '../src/reducers/arrToDoReducer';
 import ToDo from './ToDo';
 
 const window = Dimensions.get('window');
 
 const ToDos = ({ add, state }) => {
   const [text, setText] = useState('');
-  console.log(state);
+  // console.log(state.arrToDoReducer[0]);
 
   const handleSubmit = (e) => {
     const id = uuid.v1();
-    const obj = {
-      [id]: {
-        id,
-        text,
-        isCompleted: false,
-      },
+    const newToDo = {
+      id,
+      text,
+      isCompleted: false,
     };
     setText('');
-    add(obj);
+    add(newToDo);
   };
 
   return (
@@ -42,10 +40,9 @@ const ToDos = ({ add, state }) => {
         onSubmitEditing={handleSubmit}
       />
       <ScrollView style={styles.scrollV}>
-        {state.toDoReducer &&
-          Object.values(state.toDoReducer).map((toDo) => (
-            <ToDo key={toDo.id} {...toDo} />
-          ))}
+        {state.arrToDoReducer &&
+          state.arrToDoReducer.length > 0 &&
+          state.arrToDoReducer.map((toDo) => <ToDo key={toDo.id} {...toDo} />)}
       </ScrollView>
     </View>
   );
@@ -80,7 +77,7 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
-  const add = (obj) => dispatch(actionCreators.addToDo(obj));
+  const add = (newToDo) => dispatch(actionCreators.addToDo(newToDo));
 
   return { add };
 }
