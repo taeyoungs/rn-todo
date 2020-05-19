@@ -11,12 +11,18 @@ import { connect } from 'react-redux';
 import uuid from 'react-native-uuid';
 import { actionCreators } from '../src/reducers/arrToDoReducer';
 import ToDo from './ToDo';
+import CompletedToDos from './CompletedToDos';
 
 const window = Dimensions.get('window');
 
 const ToDos = ({ add, state }) => {
   const [text, setText] = useState('');
+  const [showCompleted, setShowCompleted] = useState(false);
   // console.log(state.arrToDoReducer[0]);
+
+  const handleShowC = () => {
+    setShowCompleted(!showCompleted);
+  };
 
   const handleSubmit = (e) => {
     const id = uuid.v1();
@@ -42,14 +48,27 @@ const ToDos = ({ add, state }) => {
       <ScrollView style={styles.scrollV}>
         {state.arrToDoReducer &&
           state.arrToDoReducer.length > 0 &&
-          state.arrToDoReducer.map((toDo) => <ToDo key={toDo.id} {...toDo} />)}
+          state.arrToDoReducer
+            .filter((toDo) => !toDo.isCompleted)
+            .map((toDo) => <ToDo key={toDo.id} {...toDo} />)}
+        {showCompleted
+          ? state.arrToDoReducer &&
+            state.arrToDoReducer.length > 0 &&
+            state.arrToDoReducer
+              .filter((toDo) => toDo.isCompleted)
+              .map((toDo) => <ToDo key={toDo.id} {...toDo} />)
+          : null}
       </ScrollView>
+      <CompletedToDos handleShowC={handleShowC} showCompleted={showCompleted} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     backgroundColor: 'white',
     width: window.width - 50,
     marginTop: 30,

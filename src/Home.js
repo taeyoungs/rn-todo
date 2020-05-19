@@ -13,12 +13,11 @@ const Home = ({ setInitialState, state }) => {
     try {
       // await AsyncStorage.clear();
       const toDos = await AsyncStorage.getItem('toDos');
-      console.log('toDos : ', toDos);
+      // console.log('toDos : ', toDos);
       // console.log(JSON.parse(toDos));
       if (toDos) {
         setInitialState(JSON.parse(toDos));
       }
-      //   setInitialState(toDos === null ? {} : toDos);
     } catch (err) {
       console.log(err);
     }
